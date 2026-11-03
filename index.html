@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SWES Dashboards</title>
+<meta name="theme-color" content="#14304f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SWES Dashboards">
+<style>body{margin:0;background:#eef2f7;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:#14304f;display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center}
+img{width:96px;height:96px;border-radius:22px}p{font-size:15px}.e{color:#b3261e;font-size:13px;max-width:320px}button{background:#1f4e78;color:#fff;border:0;border-radius:10px;padding:10px 18px;font-size:15px}</style>
+</head><body>
+<div id="b"><img src="icon-192.png" alt=""><p>⏳ Opening SWES Dashboards…</p></div>
+<script>
+/* St. Wilfred's – SWES Dashboards. This page only loads the app; all figures come from the private app
+   (Google Apps Script) after the app's own sign-in (e-mail code + device approved by Manish).
+   It never uses the browser's Google account, so it works whatever account(s) the phone is signed in to. */
+var SWES_API = 'https://script.google.com/macros/s/AKfycbwXzz-0pnm74CQI7ZiaxKrsACEvIGERIOyjodd83gbUXnsRdcoj4Gsa4re_eldPCHVI/exec';
+function go() {
+  fetch(SWES_API, { method: 'POST', body: JSON.stringify({ api: 'dash', fn: 'hubHtml', args: [] }),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, credentials: 'omit', redirect: 'follow' })
+  .then(function (r) { return r.json(); })
+  .then(function (o) {
+    if (!o.ok) throw new Error(o.e);
+    var h = o.r.replace(/<head>/i, '<head><script>window.SWES_API=' + JSON.stringify(SWES_API) + '<\/script>');
+    document.open(); document.write(h); document.close();
+  })
+  .catch(function (e) {
+    document.getElementById('b').innerHTML = '<img src="icon-192.png" alt=""><p>Could not open the app.</p><p class="e">' +
+      String(e && e.message || e).replace(/</g, '&lt;') + '</p><button onclick="location.reload()">Try again</button>';
+  });
+}
+go();
+</script>
+</body></html>
